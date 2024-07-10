@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ArticleNews extends Model
 {
@@ -19,4 +22,17 @@ class ArticleNews extends Model
         'author_id',
         'is_featured'
     ];
+
+    public function setNameAttribute($value) {
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function category(): BelongsTo{
+        return $this->belongsTo(Category::class, 'category_id'); // Many To One ke category_id
+    }
+
+    public function author() : BelongsTo {
+        return $this->belongsTo(Author::class, 'author_id'); // Many To One ke author_id
+    }
 }
